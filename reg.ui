@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
-    <height>622</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,37 +17,47 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>-10</y>
-      <width>71</width>
-      <height>71</height>
+      <x>310</x>
+      <y>0</y>
+      <width>211</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Rockwell Extra Bold</family>
-      <pointsize>18</pointsize>
+      <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Вход</string>
+     <string>Создай свой аккаунт!</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="nameEdit">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>100</y>
+      <width>251</width>
+      <height>31</height>
+     </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>70</y>
-      <width>71</width>
+      <x>240</x>
+      <y>80</y>
+      <width>51</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>OCR A Extended</family>
-      <pointsize>10</pointsize>
+      <family>Franklin Gothic Medium Cond</family>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -57,28 +67,28 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>140</y>
-      <width>61</width>
+      <x>240</x>
+      <y>160</y>
+      <width>51</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>OCR A Extended</family>
-      <pointsize>10</pointsize>
+      <family>Franklin Gothic Medium Cond</family>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>Пароль</string>
+     <string>Почта</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="loginEdit">
+   <widget class="QLineEdit" name="mailEdit">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>90</y>
-      <width>311</width>
+      <x>290</x>
+      <y>180</y>
+      <width>251</width>
       <height>31</height>
      </rect>
     </property>
@@ -86,83 +96,66 @@
    <widget class="QLineEdit" name="passwordEdit">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>160</y>
-      <width>311</width>
+      <x>290</x>
+      <y>260</y>
+      <width>251</width>
       <height>31</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="sign_in_btn">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>220</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>OCR A Extended</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Войти</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="forgot_password_btn">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>290</y>
-      <width>161</width>
+      <x>240</x>
+      <y>240</y>
+      <width>51</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>OCR A Extended</family>
-      <pointsize>10</pointsize>
+      <family>Franklin Gothic Medium Cond</family>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>Забыли пароль</string>
+     <string>Пароль</string>
     </property>
    </widget>
    <widget class="QPushButton" name="reg_btn">
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>320</y>
-      <width>141</width>
-      <height>21</height>
+      <y>330</y>
+      <width>171</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Stencil</family>
+      <family>Rockwell Condensed</family>
       <pointsize>12</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
-     <string>Регистрация</string>
+     <string>Зарегистрироваться</string>
     </property>
    </widget>
    <widget class="QLabel" name="errorLabel">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>296</x>
       <y>50</y>
-      <width>181</width>
-      <height>20</height>
+      <width>231</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>OCR A Extended</family>
-      <pointsize>9</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -175,7 +168,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>795</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>

@@ -5,6 +5,7 @@ from random import choice, shuffle
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets
+from registration import Registration
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -14,7 +15,7 @@ if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
     
 
 
-class Registration(QMainWindow):
+class Avtorization(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('avtorization.ui', self)
@@ -23,32 +24,25 @@ class Registration(QMainWindow):
         self.con = sqlite3.connect(db_name)
         self.cur = self.con.cursor()
 
-        self.salt_for_password = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-
-        self.registration_btn.clicked.connect(self.add_info)
+        self.sign_in_btn.clicked.connect(self.sign_in)
+        self.reg_btn.clicked.connect(self.reg)
     
-    def add_info(self):
-        if self.loginEdit.text() and self.passwordEdit.text():
-            logins = self.cur.execute(f"""SELECT id FROM logins_and_passwords WHERE login = ?""", (self.loginEdit.text(),)).fetchall()
-            if logins:
-                self.errorLable.setText("Такой логин уже существует")
-                return
-            
-            salt = shuffle([choice(self.salt_for_password) for _ in range(5)])
-            hashed_password = hashlib.sha1(f"{self.passwordEdit.text() + salt}".encode())
-            params = (self.loginEdit.text(), hashed_password.hexdigest(), "abc")
-            self.cur.execute(f"""INSERT INTO logins_and_passwords ('login', 'password', 'salt')
-                                          VALUES (?, ?, ?)""", params).fetchall()
-            self.errorLable.setText("Добро пожаловать!")
-            self.con.commit()  
-            self.close()
-        else:
-            self.errorLable.setText("Вы не ввели логин или пароль")
-            return
+    def sign_in(self):
+        hashed_password = hashlib.sha1(f"{self.passwordEdit.text()}".encode())
+        password = self.cur.execute(f"""SELECT password FROM logins_and_passwords WHERE login = ?""", (self.loginEdit.text(),)).fetchall()
+        if password and hashed_password in password:
+            self.errorLabel.setText("Добро пожаловать!")
+        elif not password or (hashed_password not in password):
+            self.errorLabel.setText("Неверный логин или пароль")
+
+    def reg(self):
+        self.reg_window = Registration()
+        self.reg_window.show()
+        self.close()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    plan = Registration()
+    plan = Avtorization()
     plan.show()
     sys.exit(app.exec_())
