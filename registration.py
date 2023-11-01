@@ -4,6 +4,7 @@ import hashlib
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets
+from main_menu import MainWindow
 
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
@@ -36,7 +37,8 @@ class Registration(QMainWindow):
             self.cur.execute(f"""INSERT INTO logins_and_passwords ('login', 'password', 'mail')
                                           VALUES (?, ?, ?)""", params).fetchall()
             self.errorLabel.setText("Добро пожаловать!")
-            self.con.commit()  
+            self.con.commit() 
+            MainWindow().show() 
             self.close()
         else:
             self.errorLabel.setText("Вы не ввели логин или пароль")
@@ -50,3 +52,4 @@ if __name__ == '__main__':
     plan = Registration()
     plan.show()
     sys.exit(app.exec_())
+ 

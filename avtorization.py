@@ -6,6 +6,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets
 from registration import Registration
+from main_menu import MainWindow
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -32,6 +33,8 @@ class Avtorization(QMainWindow):
         password = self.cur.execute(f"""SELECT password FROM logins_and_passwords WHERE login = ?""", (self.loginEdit.text(),)).fetchall()
         if password and hashed_password in password:
             self.errorLabel.setText("Добро пожаловать!")
+            MainWindow().show()
+            self.close()
         elif not password or (hashed_password not in password):
             self.errorLabel.setText("Неверный логин или пароль")
 
