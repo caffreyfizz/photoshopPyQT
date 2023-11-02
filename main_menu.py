@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
+from photoshop_window import Photoshop
 
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
@@ -25,6 +26,13 @@ class MainWindow(QMainWindow):
         #self.cur = self.con.cursor()
         self.folder_btn.setIcon(QIcon("folder.png"))
         self.folder_btn.setIconSize(QSize(121, 111))
+
+        self.add_btn.clicked.connect(self.new_photo)
+
+    def new_photo(self):
+        Photoshop().show()
+        self.close()
+
 
         
     
