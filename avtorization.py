@@ -1,7 +1,6 @@
 import sys
 import hashlib
 import sqlite3
-from random import choice, shuffle
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtWidgets
