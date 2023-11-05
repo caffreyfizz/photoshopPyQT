@@ -28,11 +28,12 @@ class Avtorization(QMainWindow):
         self.reg_btn.clicked.connect(self.reg)
     
     def sign_in(self):
-        hashed_password = hashlib.sha1(f"{self.passwordEdit.text()}".encode())
+        hashed_password = hashlib.sha1(f"{self.passwordEdit.text()}".encode()).hexdigest()
         password = self.cur.execute(f"""SELECT password FROM logins_and_passwords WHERE login = ?""", (self.loginEdit.text(),)).fetchall()
-        if password and hashed_password in password:
+        if password and password[0][0] == hashed_password:
             self.errorLabel.setText("Добро пожаловать!")
-            MainWindow().show()
+            self.main_win = MainWindow()
+            self.main_win.show()
             self.close()
         elif not password or (hashed_password not in password):
             self.errorLabel.setText("Неверный логин или пароль")

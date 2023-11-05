@@ -245,32 +245,6 @@
      <string>Сохранить</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="back_btn">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>520</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="forward_btn">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>520</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&gt;</string>
-    </property>
-   </widget>
    <widget class="QCheckBox" name="blur_btn">
     <property name="geometry">
      <rect>

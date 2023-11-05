@@ -25,20 +25,21 @@ class Registration(QMainWindow):
         self.reg_btn.clicked.connect(self.reg)
 
     def reg(self):
-        if self.loginEdit.text() and self.passwordEdit.text():
-            logins = self.cur.execute(f"""SELECT id FROM logins_and_passwords WHERE login = ?""", (self.loginEdit.text(),)).fetchall()
+        if self.nameEdit.text() and self.passwordEdit.text():
+            logins = self.cur.execute(f"""SELECT id FROM logins_and_passwords WHERE login = ?""", (self.nameEdit.text(),)).fetchall()
             if logins:
                 self.errorLabel.setText("Такой логин уже существует")
                 return
             
             #salt = shuffle([choice(self.salt_for_password) for _ in range(5)])
             hashed_password = hashlib.sha1(f"{self.passwordEdit.text()}".encode())
-            params = (self.loginEdit.text(), hashed_password.hexdigest(), self.mailEdit.text())
+            params = (self.nameEdit.text(), hashed_password.hexdigest(), self.mailEdit.text())
             self.cur.execute(f"""INSERT INTO logins_and_passwords ('login', 'password', 'mail')
                                           VALUES (?, ?, ?)""", params).fetchall()
             self.errorLabel.setText("Добро пожаловать!")
             self.con.commit() 
-            MainWindow().show() 
+            self.main_win = MainWindow()
+            self.main_win.show()
             self.close()
         else:
             self.errorLabel.setText("Вы не ввели логин или пароль")
