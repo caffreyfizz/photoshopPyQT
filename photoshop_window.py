@@ -6,7 +6,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QPixmap
 import io
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageEnhance
 
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
@@ -39,9 +39,10 @@ class Photoshop(QMainWindow):
         self.save_btn.clicked.connect(self.save)
         
         self.lightSlider.setMinimum(0)
-        self.lightSlider.setMaximum(500)
-        self.lightSlider.setValue(250)
-        self.lightSlider.valueChanged.connect(self.light)
+        self.lightSlider.setMaximum(50)
+        self.lightSlider.setValue(25)
+        self.lightSlider.valueChanged.connect(lambda: self.light(self.lightSlider.value(), after_filter=False))
+        self.past_value = 25
     
     def get_bytes_image(*pixmapLabel):
         pixmap_img = pixmapLabel[-1]
@@ -76,7 +77,10 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
     def circuit(self):
         if self.circuit_btn.isChecked():
@@ -101,7 +105,10 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
     def detailing(self):
         if self.detailing_btn.isChecked():
@@ -126,7 +133,10 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
     def bright_warm(self):
         if self.bright_warm_btn.isChecked():
@@ -156,7 +166,10 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
     def bright(self):
         if self.bright_btn.isChecked():
@@ -186,7 +199,10 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
     def chill(self):
         if self.chill_btn.isChecked():
@@ -216,7 +232,10 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
     def blackwhite(self):
         if self.blackwhite_btn.isChecked():
@@ -247,23 +266,28 @@ class Photoshop(QMainWindow):
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                filter_for_img(self)
+                if img_filter == "light":
+                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                else:
+                    filter_for_img(self)
 
-    def light(self, value):
-        step = -(250 - value)
-        self.img_from_label = self.imgLabel.pixmap()
-        pixmap_bytes = self.get_bytes_image(self.img_from_label)
+    def light(self, value, after_filter=False):
+        step = (value - 25) / 50
+        if self.past_value > value and value < 25:
+            step = step
+        elif self.past_value < value and value < 25:
+            step = (value - 25) / 50 - abs((self.past_value - 25) / 50)
+        elif self.past_value > value and value > 25:
+            step = (value - 25) / 50 - (self.past_value - 25) / 50
+        elif self.past_value < value and value > 25:
+            step = step
+        self.past_value = value
+        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
         with Image.open(io.BytesIO(pixmap_bytes)) as image:
-            image = image.convert("RGB")
-            x, y = image.size
-            pixels = image.load()
-            for i in range(x):
-                for j in range(y):
-                    r, g, b = pixels[i, j]
-                    pixels[i, j] = r + step, g + step, b
+            enhancer = ImageEnhance.Brightness(image)
+            im_output = enhancer.enhance(1 + step)
+            im_output.save('light.png')
 
-                    
-            image.save("light.png")
             self.pix_map = QPixmap("light.png")
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
 
