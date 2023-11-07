@@ -41,7 +41,7 @@ class Photoshop(QMainWindow):
         self.lightSlider.setMinimum(0)
         self.lightSlider.setMaximum(50)
         self.lightSlider.setValue(25)
-        self.lightSlider.valueChanged.connect(lambda: self.light(self.lightSlider.value(), after_filter=False))
+        self.lightSlider.valueChanged.connect(self.light)
         self.past_value = 25
     
     def get_bytes_image(*pixmapLabel):
@@ -271,16 +271,10 @@ class Photoshop(QMainWindow):
                 else:
                     filter_for_img(self)
 
-    def light(self, value, after_filter=False):
-        step = (value - 25) / 50
-        if self.past_value > value and value < 25:
-            step = step
-        elif self.past_value < value and value < 25:
-            step = (value - 25) / 50 - abs((self.past_value - 25) / 50)
-        elif self.past_value > value and value > 25:
-            step = (value - 25) / 50 - (self.past_value - 25) / 50
-        elif self.past_value < value and value > 25:
-            step = step
+    def light(self, value):
+        step = (value - 25) / 40
+        if self.past_value < value and value < 25:
+            step = ((self.past_value - 25) / 40) + ((value - 25) / 40 + abs((self.past_value - 25) / 40))
         self.past_value = value
         pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
         with Image.open(io.BytesIO(pixmap_bytes)) as image:
