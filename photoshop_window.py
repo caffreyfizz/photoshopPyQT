@@ -23,6 +23,10 @@ class Photoshop(QMainWindow):
         uic.loadUi('photoshop.ui', self)
 
         self.filters = []
+        self.sliders = {"light": self.lightSlider,
+                         "contrast": self.contrastSlider,
+                         "sharpness": self.sharpnessSlider,
+                         "transparency": self.transparencySlider}
         
         self.curr_image = QFileDialog.getOpenFileName(self, 'Выбрать картинку', '')[0]
         self.pix_map = QPixmap(self.curr_image)
@@ -42,7 +46,21 @@ class Photoshop(QMainWindow):
         self.lightSlider.setMaximum(50)
         self.lightSlider.setValue(25)
         self.lightSlider.valueChanged.connect(self.light)
-        self.past_value = 25
+
+        self.contrastSlider.setMinimum(0)
+        self.contrastSlider.setMaximum(50)
+        self.contrastSlider.setValue(25)
+        self.contrastSlider.valueChanged.connect(self.contrast)
+
+        self.sharpnessSlider.setMinimum(0)
+        self.sharpnessSlider.setMaximum(50)
+        self.sharpnessSlider.setValue(25)
+        self.sharpnessSlider.valueChanged.connect(self.sharpness)
+
+        self.transparencySlider.setMinimum(0)
+        self.transparencySlider.setMaximum(30)
+        self.transparencySlider.setValue(30)
+        self.transparencySlider.valueChanged.connect(self.transparency)
     
     def get_bytes_image(*pixmapLabel):
         pixmap_img = pixmapLabel[-1]
@@ -56,6 +74,7 @@ class Photoshop(QMainWindow):
     def blur(self):
 
         if self.blur_btn.isChecked():
+            
             self.img_from_label = self.imgLabel.pixmap()
             pixmap_bytes = self.get_bytes_image(self.img_from_label)
             with Image.open(io.BytesIO(pixmap_bytes)) as image:
@@ -74,11 +93,17 @@ class Photoshop(QMainWindow):
             self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
+
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
             
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
@@ -103,10 +128,16 @@ class Photoshop(QMainWindow):
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
+            
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
@@ -131,10 +162,16 @@ class Photoshop(QMainWindow):
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
+            
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
@@ -164,10 +201,16 @@ class Photoshop(QMainWindow):
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
+            
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
@@ -197,10 +240,16 @@ class Photoshop(QMainWindow):
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
+            
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
@@ -230,10 +279,16 @@ class Photoshop(QMainWindow):
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
+            
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
@@ -264,19 +319,35 @@ class Photoshop(QMainWindow):
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
+            for img_filter, slider in self.sliders.items():
+                if img_filter not in self.filters:
+                    continue
+                filter_for_img = getattr(Photoshop, img_filter)
+                filter_for_img(self, slider.value())
+            
             for img_filter in self.filters:
                 filter_for_img = getattr(Photoshop, img_filter)
-                if img_filter == "light":
-                    filter_for_img(self, self.lightSlider.value(), after_filter=True)
+                if img_filter in self.sliders.keys():
+                    continue
                 else:
                     filter_for_img(self)
 
     def light(self, value):
         step = (value - 25) / 40
-        if self.past_value < value and value < 25:
-            step = ((self.past_value - 25) / 40) + ((value - 25) / 40 + abs((self.past_value - 25) / 40))
-        self.past_value = value
+        
+        """ for img_filter in self.filters:
+            filter_for_img = getattr(Photoshop, img_filter)
+            if img_filter in self.sliders.keys():
+                filter_for_img(self, self.sliders[img_filter].value())
+            else:
+                filter_for_img(self, after_slider=True)
+        
+        if self.filters:
+            self.img_from_label = self.imgLabel.pixmap()
+            pixmap_bytes = self.get_bytes_image(self.img_from_label)
+        else: """
         pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+            
         with Image.open(io.BytesIO(pixmap_bytes)) as image:
             enhancer = ImageEnhance.Brightness(image)
             im_output = enhancer.enhance(1 + step)
@@ -289,6 +360,56 @@ class Photoshop(QMainWindow):
         if "light" not in self.filters:
             self.filters.append("light")
         remove("light.png")
+
+    def contrast(self, value):
+        step = (value - 25) / 35  
+        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        
+        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+            enhancer = ImageEnhance.Contrast(image)
+            im_output = enhancer.enhance(1 + step)
+            im_output.save('contrast.png')
+
+            self.pix_map = QPixmap("contrast.png")
+            scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
+
+            self.imgLabel.setPixmap(scaled)
+        if "contrast" not in self.filters:
+            self.filters.append("contrast")
+        remove("contrast.png")
+
+    def sharpness(self, value):
+        step = (value - 25) / 7
+        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        
+        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+            enhancer = ImageEnhance.Sharpness(image)
+            im_output = enhancer.enhance(1 + step)
+            im_output.save('sharpness.png')
+
+            self.pix_map = QPixmap("sharpness.png")
+            scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
+
+            self.imgLabel.setPixmap(scaled)
+        if "sharpness" not in self.filters:
+            self.filters.append("sharpness")
+        remove("sharpness.png")
+
+    def transparency(self, value):
+        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        
+        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+            im_output = image.convert("RGBA")
+            im_output.putalpha(value * 8)
+            im_output.save("transparency.png")
+            
+            self.pix_map = QPixmap("transparency.png")
+            scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
+
+            self.imgLabel.setPixmap(scaled)
+        if "transparency" not in self.filters:
+            self.filters.append("transparency")
+        remove("transparency.png")
    
     def save(self):
         pass

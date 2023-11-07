@@ -154,10 +154,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>Температура</string>
+     <string>Резкость</string>
     </property>
    </widget>
-   <widget class="QSlider" name="temperatureSlider">
+   <widget class="QSlider" name="sharpnessSlider">
     <property name="geometry">
      <rect>
       <x>580</x>
