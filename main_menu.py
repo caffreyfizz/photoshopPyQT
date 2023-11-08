@@ -17,13 +17,15 @@ if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, login):
         super().__init__()
         uic.loadUi('main_window.ui', self)
-        
         #db_name = "users.sqlite"
         #self.con = sqlite3.connect(db_name)
         #self.cur = self.con.cursor()
+        
+        self.login = login
+        
         self.folder_btn.setIcon(QIcon("folder.png"))
         self.folder_btn.setIconSize(QSize(121, 111))
 

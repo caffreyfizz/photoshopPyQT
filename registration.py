@@ -36,9 +36,9 @@ class Registration(QMainWindow):
             params = (self.nameEdit.text(), hashed_password.hexdigest(), self.mailEdit.text())
             self.cur.execute(f"""INSERT INTO logins_and_passwords ('login', 'password', 'mail')
                                           VALUES (?, ?, ?)""", params).fetchall()
-            self.errorLabel.setText("Добро пожаловать!")
-            self.con.commit() 
-            self.main_win = MainWindow()
+            self.errorLabel.setText("Успешный вход")
+            self.con.commit()
+            self.main_win = MainWindow(self.nameEdit.text())
             self.main_win.show()
             self.close()
         else:

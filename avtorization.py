@@ -19,7 +19,6 @@ class Avtorization(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('avtorization.ui', self)
-        
         db_name = "users.sqlite"
         self.con = sqlite3.connect(db_name)
         self.cur = self.con.cursor()

@@ -1,5 +1,5 @@
 import sys
-from os import remove
+import os
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
 from PyQt5 import QtCore, QtWidgets
@@ -61,6 +61,8 @@ class Photoshop(QMainWindow):
         self.transparencySlider.setMaximum(30)
         self.transparencySlider.setValue(30)
         self.transparencySlider.valueChanged.connect(self.transparency)
+
+        self.save_btn.clicked.connect(self.save)
     
     def get_bytes_image(*pixmapLabel):
         pixmap_img = pixmapLabel[-1]
@@ -87,7 +89,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "blur" not in self.filters:
                 self.filters.append("blur")
-            remove("blur.png")
+            os.remove("blur.png")
         else:
             self.filters.remove("blur")
             self.pix_map = QPixmap(self.curr_image)
@@ -121,7 +123,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "circuit" not in self.filters:
                 self.filters.append("circuit")
-            remove("circuit.png")
+            os.remove("circuit.png")
         else:
             self.filters.remove("circuit")
             self.pix_map = QPixmap(self.curr_image)
@@ -155,7 +157,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "detailing" not in self.filters:
                 self.filters.append("detailing")
-            remove("detailing.png")
+            os.remove("detailing.png")
         else:
             self.filters.remove("detailing")
             self.pix_map = QPixmap(self.curr_image)
@@ -194,7 +196,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "bright_warm" not in self.filters:
                 self.filters.append("bright_warm")
-            remove("bright_warm.png")
+            os.remove("bright_warm.png")
         else:
             self.filters.remove("bright_warm")
             self.pix_map = QPixmap(self.curr_image)
@@ -233,7 +235,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "bright" not in self.filters:
                 self.filters.append("bright")
-            remove("bright.png")
+            os.remove("bright.png")
         else:
             self.filters.remove("bright")
             self.pix_map = QPixmap(self.curr_image)
@@ -272,7 +274,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "chill" not in self.filters:
                 self.filters.append("chill")
-            remove("chill.png")
+            os.remove("chill.png")
         else:
             self.filters.remove("chill")
             self.pix_map = QPixmap(self.curr_image)
@@ -312,7 +314,7 @@ class Photoshop(QMainWindow):
                 self.imgLabel.setPixmap(scaled)
             if "blackwhite" not in self.filters:
                 self.filters.append("blackwhite")
-            remove("blackwhite.png")
+            os.remove("blackwhite.png")
         else:
             self.filters.remove("blackwhite")
             self.pix_map = QPixmap(self.curr_image)
@@ -359,7 +361,7 @@ class Photoshop(QMainWindow):
             self.imgLabel.setPixmap(scaled)
         if "light" not in self.filters:
             self.filters.append("light")
-        remove("light.png")
+        os.remove("light.png")
 
     def contrast(self, value):
         step = (value - 25) / 35  
@@ -376,7 +378,7 @@ class Photoshop(QMainWindow):
             self.imgLabel.setPixmap(scaled)
         if "contrast" not in self.filters:
             self.filters.append("contrast")
-        remove("contrast.png")
+        os.remove("contrast.png")
 
     def sharpness(self, value):
         step = (value - 25) / 7
@@ -393,7 +395,7 @@ class Photoshop(QMainWindow):
             self.imgLabel.setPixmap(scaled)
         if "sharpness" not in self.filters:
             self.filters.append("sharpness")
-        remove("sharpness.png")
+        os.remove("sharpness.png")
 
     def transparency(self, value):
         pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
@@ -409,10 +411,14 @@ class Photoshop(QMainWindow):
             self.imgLabel.setPixmap(scaled)
         if "transparency" not in self.filters:
             self.filters.append("transparency")
-        remove("transparency.png")
+        os.remove("transparency.png")
    
     def save(self):
-        pass
+        file_name = QFileDialog.getSaveFileName(self, "Сохранение картинки", "result", "*.png")[0]
+        if not file_name:
+            return
+
+        self.imgLabel.pixmap().save(file_name)
         
 
 if __name__ == '__main__':
