@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPixmap
 import io
 
 from PIL import Image, ImageFilter, ImageEnhance
+from save_win import SaveFile
 
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
@@ -414,11 +415,10 @@ class Photoshop(QMainWindow):
         os.remove("transparency.png")
    
     def save(self):
-        file_name = QFileDialog.getSaveFileName(self, "Сохранение картинки", "result", "*.png")[0]
-        if not file_name:
-            return
-
-        self.imgLabel.pixmap().save(file_name)
+        self.save_dialog = SaveFile(self.imgLabel)
+        self.save_dialog.show()
+        #self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
+        #self.show()
         
 
 if __name__ == '__main__':
