@@ -26,15 +26,14 @@ class Registration(QMainWindow):
 
     def reg(self):
         if self.nameEdit.text() and self.passwordEdit.text():
-            logins = self.cur.execute(f"""SELECT id FROM logins_and_passwords WHERE login = ?""", (self.nameEdit.text(),)).fetchall()
+            logins = self.cur.execute(f"""SELECT id FROM logins WHERE login = ?""", (self.nameEdit.text(),)).fetchall()
             if logins:
                 self.errorLabel.setText("Такой логин уже существует")
                 return
             
-            #salt = shuffle([choice(self.salt_for_password) for _ in range(5)])
             hashed_password = hashlib.sha1(f"{self.passwordEdit.text()}".encode())
             params = (self.nameEdit.text(), hashed_password.hexdigest(), self.mailEdit.text())
-            self.cur.execute(f"""INSERT INTO logins_and_passwords ('login', 'password', 'mail')
+            self.cur.execute(f"""INSERT INTO logins ('login', 'password', 'mail')
                                           VALUES (?, ?, ?)""", params).fetchall()
             self.errorLabel.setText("Успешный вход")
             self.con.commit()

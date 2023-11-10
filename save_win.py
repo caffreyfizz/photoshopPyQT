@@ -14,13 +14,27 @@ if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
 
 
 class SaveFile(QDialog):
-    def __init__(self, label):
+    def __init__(self, label, login):
         super().__init__()
         uic.loadUi('save_dialog.ui', self)
         self.picture = label
+        self.login = login
+
+        db_name = "users.sqlite"
+        self.con = sqlite3.connect(db_name)
+        self.cur = self.con.cursor()
         
         self.save_as_btn.clicked.connect(self.save_as)
         self.save_cloud_btn.clicked.connect(self.save_cloud)
+
+    def get_bytes_image(*pixmapLabel):
+        pixmap_img = pixmapLabel[-1]
+        ba = QtCore.QByteArray()
+        buff = QtCore.QBuffer(ba)
+        buff.open(QtCore.QIODevice.WriteOnly) 
+        ok = pixmap_img.save(buff, "PNG")
+        pixmap_bytes = ba.data()
+        return pixmap_bytes
 
     def save_as(self):
         file_name = QFileDialog.getSaveFileName(self, "Сохранение картинки", "result", "*.png")[0]
@@ -31,7 +45,13 @@ class SaveFile(QDialog):
         self.close()
 
     def save_cloud(self):
-        pass
+        self.img_from_label = self.picture.pixmap()
+        pixmap_bytes = self.get_bytes_image(self.img_from_label)
+        user = self.cur.execute("""SELECT id from logins WHERE login = ?""", (self.login,)).fetchall()
+        
+        self.cur.execute(f"""INSERT INTO images(name, user) VALUES (?, ?)""", (pixmap_bytes, user[0][0])).fetchall()
+        self.con.commit()
+        self.close()
 
 
         

@@ -19,9 +19,10 @@ if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
 
 
 class Photoshop(QMainWindow):
-    def __init__(self):
+    def __init__(self, login):
         super().__init__()
         uic.loadUi('photoshop.ui', self)
+        self.login = login
 
         self.filters = []
         self.sliders = {"light": self.lightSlider,
@@ -415,7 +416,7 @@ class Photoshop(QMainWindow):
         os.remove("transparency.png")
    
     def save(self):
-        self.save_dialog = SaveFile(self.imgLabel)
+        self.save_dialog = SaveFile(self.imgLabel, self.login)
         self.save_dialog.show()
         #self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
         #self.show()
