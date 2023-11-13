@@ -19,7 +19,7 @@ if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
 
 
 class Photoshop(QMainWindow):
-    def __init__(self, login):
+    def __init__(self, login, *args):
         super().__init__()
         uic.loadUi('photoshop.ui', self)
         self.login = login
@@ -30,10 +30,22 @@ class Photoshop(QMainWindow):
                          "sharpness": self.sharpnessSlider,
                          "transparency": self.transparencySlider}
         
-        self.curr_image = QFileDialog.getOpenFileName(self, 'Выбрать картинку', '')[0]
-        self.pix_map = QPixmap(self.curr_image)
-        scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
-        self.imgLabel.setPixmap(scaled)
+        self.coordsLabel.setText("Координаты: None, None")
+        self.setMouseTracking(True)
+        if not args:
+            self.curr_image = QFileDialog.getOpenFileName(self, 'Выбрать картинку', '')[0]
+            self.pix_map = QPixmap(self.curr_image)
+            scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
+            self.imgLabel.setPixmap(scaled)
+        if args:
+            self.img_from_btn = args[0].icon().pixmap()
+            pixmap_bytes = self.get_bytes_image(self.img_from_btn)
+            with Image.open(io.BytesIO(pixmap_bytes)) as image:
+                image.save("icon.png")
+                self.pix_map = QPixmap("icon.png")
+                scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
+                self.imgLabel.setPixmap(scaled)
+            os.remove("icon.png")
 
         self.blur_btn.clicked.connect(self.blur)
         self.circuit_btn.clicked.connect(self.circuit)
@@ -414,6 +426,9 @@ class Photoshop(QMainWindow):
         if "transparency" not in self.filters:
             self.filters.append("transparency")
         os.remove("transparency.png")
+
+    def mouseMoveEvent(self, event):
+        self.coordsLabel.setText(f"Координаты: {event.x()}, {event.y()}")
    
     def save(self):
         self.save_dialog = SaveFile(self.imgLabel, self.login)

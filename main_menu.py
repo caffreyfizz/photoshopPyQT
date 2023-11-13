@@ -4,7 +4,7 @@ import io
 import sqlite3
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QHeaderView, QFrame
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, Qt
 from photoshop_window import Photoshop
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize
@@ -35,7 +35,6 @@ class MainWindow(QMainWindow):
         self.imgTable.setFrameStyle(QFrame.NoFrame)
         self.imgTable.setShowGrid(False)
         self.imgTable.verticalHeader().setDefaultSectionSize(180)
-        self.imgTable.
 
         self.welcomeLabel.setText(f"Добро пожаловать, {self.login}")
         self.add_btn.clicked.connect(self.new_photo)
@@ -61,7 +60,8 @@ class MainWindow(QMainWindow):
                 if column == 4:
                     line += 1
                     column = 0
-                self.button = QPushButton(f"image{img_counter}")
+                self.button = QPushButton(f"image{img_counter}", objectName=f"btn{img_counter}")
+                self.button.text()
                 self.buttons_icon.append(self.button)
                 with Image.open(io.BytesIO(all_images[i][0])) as img_icon:
                     img_icon.save(f"image{img_counter}.png")
@@ -74,11 +74,20 @@ class MainWindow(QMainWindow):
                 column += 1
                 img_counter += 1
 
+            for self.btn in self.buttons_icon:
+                self.btn.clicked.connect(lambda: self.open_photo(self.btn))
+
 
     def new_photo(self):
         self.phtsp = Photoshop(self.login)
         self.phtsp.show()
         self.close()
+
+    def open_photo(self, btn):
+        self.phtsp = Photoshop(self.login, btn)
+        self.phtsp.show()
+        self.close()
+
 
 
         
