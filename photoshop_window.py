@@ -8,6 +8,7 @@ import io
 
 from PIL import Image, ImageFilter, ImageEnhance
 from save_win import SaveFile
+from share_window import Share
 
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
@@ -79,6 +80,7 @@ class Photoshop(QMainWindow):
         self.transparencySlider.valueChanged.connect(self.transparency)
 
         self.save_btn.clicked.connect(self.save)
+        self.share_btn.clicked.connect(self.share)
 
         style_for_imgLabel = """QLabel {
     background-image: url(background.jpg);
@@ -132,6 +134,7 @@ border: 2px solid #09009B;
         self.contrastSlider.setStyleSheet(style_for_slider)
         self.lightSlider.setStyleSheet(style_for_slider)
         self.save_btn.setStyleSheet(style_for_btn)
+        self.share_btn.setStyleSheet(style_for_btn)
         self.imgLabel.setStyleSheet(style_for_imgLabel)
 
         
@@ -537,6 +540,12 @@ border: 2px solid #09009B;
     def save(self):
         self.save_dialog = SaveFile(self.imgLabel, self.login)
         self.save_dialog.show()
+
+    def share(self):
+        self.img_from_label = self.imgLabel.pixmap()
+        pixmap_bytes = self.get_bytes_image(self.img_from_label)
+        self.share = Share(pixmap_bytes)
+        self.share.show()
         
 
 if __name__ == '__main__':
