@@ -17,8 +17,25 @@ class SaveFile(QDialog):
     def __init__(self, label, login):
         super().__init__()
         uic.loadUi('save_dialog.ui', self)
+        self.setWindowTitle("Сохранить")
+
         self.picture = label
         self.login = login
+
+        style_for_btn = """background-color: rgb(255, 255, 255);\n
+border-radius: 10px;\n
+\n
+}\n
+QPushButton:hover{    \n
+    background-color: rgb(191, 191, 191);\n
+    effect = QtWidgets.QGraphicsDropShadowEffect(QPushButton)\n
+    effect.setOffset(0, 0)\n
+    effect.setBlurRadius(20)\n
+    effect.setColor(QColor(57, 219, 255))\n
+    QPushButton.setGraphicsEffect(effect)
+    border-radius: 48px;        /* круглый */
+border: 2px solid #09009B;
+"""
 
         db_name = "users.sqlite"
         self.con = sqlite3.connect(db_name)
@@ -26,6 +43,8 @@ class SaveFile(QDialog):
         
         self.save_as_btn.clicked.connect(self.save_as)
         self.save_cloud_btn.clicked.connect(self.save_cloud)
+        self.save_as_btn.setStyleSheet(style_for_btn)
+        self.save_cloud_btn.setStyleSheet(style_for_btn)
 
     def get_bytes_image(*pixmapLabel):
         pixmap_img = pixmapLabel[-1]

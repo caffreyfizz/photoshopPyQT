@@ -48,19 +48,6 @@
      <string>+</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="profile_btn">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>0</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Профиль</string>
-    </property>
-   </widget>
    <widget class="QTableWidget" name="imgTable">
     <property name="geometry">
      <rect>

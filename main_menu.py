@@ -3,12 +3,12 @@ import os
 import io
 import sqlite3
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QHeaderView, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QHeaderView, QFrame, QButtonGroup
 from PyQt5 import QtCore, QtWidgets, Qt
-from photoshop_window import Photoshop
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize
 from PIL import Image
+from photoshop_window import Photoshop
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -22,12 +22,40 @@ class MainWindow(QMainWindow):
     def __init__(self, login):
         super().__init__()
         uic.loadUi('main_window.ui', self)
+        self.setWindowTitle("Главное меню")
+        self.setStyleSheet('.QWidget {background-image: url(background.jpg);}')
+
         db_name = "users.sqlite"
         self.con = sqlite3.connect(db_name)
         self.cur = self.con.cursor()
         
         self.login = login
-        self.buttons_icon = []
+        self.buttons_icon = {}
+        self.all_buttons = QButtonGroup()
+
+        style_for_table = """
+            QTableWidget {
+                background-image: url(background.jpg);  
+                color: blue;             
+            }
+        """
+
+        style_for_btn = """background-color: rgb(255, 255, 255);\n
+border-radius: 10px;\n
+\n
+}\n
+QPushButton:hover{    \n
+    background-color: rgb(191, 191, 191);\n
+    effect = QtWidgets.QGraphicsDropShadowEffect(QPushButton)\n
+    effect.setOffset(0, 0)\n
+    effect.setBlurRadius(20)\n
+    effect.setColor(QColor(57, 219, 255))\n
+    QPushButton.setGraphicsEffect(effect)
+    border-radius: 48px;        /* круглый */
+border: 2px solid #09009B;
+"""
+        self.add_btn.setStyleSheet(style_for_btn)
+        self.imgTable.setStyleSheet(style_for_table)
         
         self.imgTable.verticalHeader().hide()
         self.imgTable.horizontalHeader().hide()
@@ -61,21 +89,24 @@ class MainWindow(QMainWindow):
                     line += 1
                     column = 0
                 self.button = QPushButton(f"image{img_counter}", objectName=f"btn{img_counter}")
+                self.all_buttons.addButton(self.button)
                 self.button.text()
-                self.buttons_icon.append(self.button)
+                
                 with Image.open(io.BytesIO(all_images[i][0])) as img_icon:
+                    self.buttons_icon[self.button] = io.BytesIO(all_images[i][0])
+                    
                     img_icon.save(f"image{img_counter}.png")
                     self.result_pm = QPixmap(f"image{img_counter}.png")
                     scaled = self.result_pm.scaled(self.button.size(), QtCore.Qt.KeepAspectRatio)
                     self.button.setIcon(QIcon(scaled))
                     self.button.setIconSize(QSize(640, 480))
+                
                 self.imgTable.setCellWidget(line, column, self.button)
                 os.remove(f"image{img_counter}.png")
                 column += 1
                 img_counter += 1
 
-            for self.btn in self.buttons_icon:
-                self.btn.clicked.connect(lambda: self.open_photo(self.btn))
+            self.all_buttons.buttonClicked.connect(self.open_photo)
 
 
     def new_photo(self):
@@ -84,15 +115,9 @@ class MainWindow(QMainWindow):
         self.close()
 
     def open_photo(self, btn):
-        self.phtsp = Photoshop(self.login, btn)
+        self.phtsp = Photoshop(self.login, self.buttons_icon[btn])
         self.phtsp.show()
         self.close()
-
-
-
-        
-    
-
 
 
 if __name__ == '__main__':

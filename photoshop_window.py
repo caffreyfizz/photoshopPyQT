@@ -22,7 +22,11 @@ class Photoshop(QMainWindow):
     def __init__(self, login, *args):
         super().__init__()
         uic.loadUi('photoshop.ui', self)
+        self.setWindowTitle("Редактирование")
+        self.setStyleSheet('.QWidget {background-image: url(background.jpg);}')
+
         self.login = login
+        self.args = args
 
         self.filters = []
         self.sliders = {"light": self.lightSlider,
@@ -32,15 +36,13 @@ class Photoshop(QMainWindow):
         
         self.coordsLabel.setText("Координаты: None, None")
         self.setMouseTracking(True)
-        if not args:
+        if not self.args:
             self.curr_image = QFileDialog.getOpenFileName(self, 'Выбрать картинку', '')[0]
             self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
-        if args:
-            self.img_from_btn = args[0].icon().pixmap()
-            pixmap_bytes = self.get_bytes_image(self.img_from_btn)
-            with Image.open(io.BytesIO(pixmap_bytes)) as image:
+        if self.args:
+            with Image.open(args[0]) as image:
                 image.save("icon.png")
                 self.pix_map = QPixmap("icon.png")
                 scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
@@ -77,6 +79,62 @@ class Photoshop(QMainWindow):
         self.transparencySlider.valueChanged.connect(self.transparency)
 
         self.save_btn.clicked.connect(self.save)
+
+        style_for_imgLabel = """QLabel {
+    background-image: url(background.jpg);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 2px;
+    outline: none;
+}
+"""
+
+        style_for_slider = """
+            QSlider{
+                background: #E3DEE2;
+            }
+            QSlider::groove:horizontal {  
+                height: 10px;
+                margin: 0px;
+                border-radius: 5px;
+                background: #B0AEB1;
+            }
+            QSlider::handle:horizontal {
+                background: #fff;
+                border: 1px solid #E3DEE2;
+                width: 17px;
+                margin: -5px 0; 
+                border-radius: 8px;
+            }
+            QSlider::sub-page:qlineargradient {
+                background: #3B99FC;
+                border-radius: 5px;
+            }
+        """
+
+        style_for_btn = """background-color: rgb(255, 255, 255);\n
+border-radius: 10px;\n
+\n
+}\n
+QPushButton:hover{    \n
+    background-color: rgb(191, 191, 191);\n
+    effect = QtWidgets.QGraphicsDropShadowEffect(QPushButton)\n
+    effect.setOffset(0, 0)\n
+    effect.setBlurRadius(20)\n
+    effect.setColor(QColor(57, 219, 255))\n
+    QPushButton.setGraphicsEffect(effect)
+    border-radius: 48px;        /* круглый */
+border: 2px solid #09009B;
+"""
+        self.transparencySlider.setStyleSheet(style_for_slider)
+        self.sharpnessSlider.setStyleSheet(style_for_slider)
+        self.contrastSlider.setStyleSheet(style_for_slider)
+        self.lightSlider.setStyleSheet(style_for_slider)
+        self.save_btn.setStyleSheet(style_for_btn)
+        self.imgLabel.setStyleSheet(style_for_imgLabel)
+
+        
     
     def get_bytes_image(*pixmapLabel):
         pixmap_img = pixmapLabel[-1]
@@ -106,7 +164,13 @@ class Photoshop(QMainWindow):
             os.remove("blur.png")
         else:
             self.filters.remove("blur")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
 
@@ -140,7 +204,13 @@ class Photoshop(QMainWindow):
             os.remove("circuit.png")
         else:
             self.filters.remove("circuit")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
@@ -174,7 +244,13 @@ class Photoshop(QMainWindow):
             os.remove("detailing.png")
         else:
             self.filters.remove("detailing")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
@@ -213,7 +289,13 @@ class Photoshop(QMainWindow):
             os.remove("bright_warm.png")
         else:
             self.filters.remove("bright_warm")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
@@ -252,7 +334,13 @@ class Photoshop(QMainWindow):
             os.remove("bright.png")
         else:
             self.filters.remove("bright")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
@@ -291,7 +379,13 @@ class Photoshop(QMainWindow):
             os.remove("chill.png")
         else:
             self.filters.remove("chill")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
@@ -331,7 +425,13 @@ class Photoshop(QMainWindow):
             os.remove("blackwhite.png")
         else:
             self.filters.remove("blackwhite")
-            self.pix_map = QPixmap(self.curr_image)
+            if self.args:
+                with Image.open(self.args[0]) as image:
+                    image.save("null_img.png")
+                    self.pix_map = QPixmap("null_img.png")
+                os.remove("null_img.png")
+            else:
+                self.pix_map = QPixmap(self.curr_image)
             scaled = self.pix_map.scaled(self.imgLabel.size(), QtCore.Qt.KeepAspectRatio)
             self.imgLabel.setPixmap(scaled)
             
@@ -350,21 +450,13 @@ class Photoshop(QMainWindow):
 
     def light(self, value):
         step = (value - 25) / 40
-        
-        """ for img_filter in self.filters:
-            filter_for_img = getattr(Photoshop, img_filter)
-            if img_filter in self.sliders.keys():
-                filter_for_img(self, self.sliders[img_filter].value())
-            else:
-                filter_for_img(self, after_slider=True)
-        
-        if self.filters:
-            self.img_from_label = self.imgLabel.pixmap()
-            pixmap_bytes = self.get_bytes_image(self.img_from_label)
-        else: """
-        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        if not self.args:
+            pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+            img_for_label = io.BytesIO(pixmap_bytes)
+        else:
+            img_for_label = self.args[0]
             
-        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+        with Image.open(img_for_label) as image:
             enhancer = ImageEnhance.Brightness(image)
             im_output = enhancer.enhance(1 + step)
             im_output.save('light.png')
@@ -378,10 +470,14 @@ class Photoshop(QMainWindow):
         os.remove("light.png")
 
     def contrast(self, value):
-        step = (value - 25) / 35  
-        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        step = (value - 25) / 35
+        if not self.args:
+            pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+            img_for_label = io.BytesIO(pixmap_bytes)
+        else:
+            img_for_label = self.args[0]
         
-        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+        with Image.open(img_for_label) as image:
             enhancer = ImageEnhance.Contrast(image)
             im_output = enhancer.enhance(1 + step)
             im_output.save('contrast.png')
@@ -396,9 +492,13 @@ class Photoshop(QMainWindow):
 
     def sharpness(self, value):
         step = (value - 25) / 7
-        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        if not self.args:
+            pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+            img_for_label = io.BytesIO(pixmap_bytes)
+        else:
+            img_for_label = self.args[0]
         
-        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+        with Image.open(img_for_label) as image:
             enhancer = ImageEnhance.Sharpness(image)
             im_output = enhancer.enhance(1 + step)
             im_output.save('sharpness.png')
@@ -412,9 +512,13 @@ class Photoshop(QMainWindow):
         os.remove("sharpness.png")
 
     def transparency(self, value):
-        pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+        if not self.args:
+            pixmap_bytes = self.get_bytes_image(QPixmap(self.curr_image))
+            img_for_label = io.BytesIO(pixmap_bytes)
+        else:
+            img_for_label = self.args[0]
         
-        with Image.open(io.BytesIO(pixmap_bytes)) as image:
+        with Image.open(img_for_label) as image:
             im_output = image.convert("RGBA")
             im_output.putalpha(value * 8)
             im_output.save("transparency.png")
@@ -433,8 +537,6 @@ class Photoshop(QMainWindow):
     def save(self):
         self.save_dialog = SaveFile(self.imgLabel, self.login)
         self.save_dialog.show()
-        #self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowCloseButtonHint)
-        #self.show()
         
 
 if __name__ == '__main__':

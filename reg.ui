@@ -61,7 +61,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Логин</string>
+     <string>Имя</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -154,8 +154,10 @@
     </property>
     <property name="font">
      <font>
-      <family>OCR A Extended</family>
-      <pointsize>10</pointsize>
+      <family>Rockwell Condensed</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
