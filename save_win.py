@@ -73,11 +73,6 @@ border: 2px solid #09009B;
         self.close()
 
 
-        
-    
-
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     plan = SaveFile()

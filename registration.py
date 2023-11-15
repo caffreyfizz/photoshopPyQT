@@ -75,12 +75,9 @@ QLineEdit {
             self.errorLabel.setText("Вы не ввели логин или пароль")
             return
     
-    
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     plan = Registration()
     plan.show()
     sys.exit(app.exec_())
- 
